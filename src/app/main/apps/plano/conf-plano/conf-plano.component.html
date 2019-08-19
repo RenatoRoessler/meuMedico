@@ -1,0 +1,171 @@
+<div fxFill>
+    <div fxLayout="column" *ngIf="onPrimeiraTela">
+        <div fxLayout="row" fxLayoutAlign="center center">
+            <mat-card class="info-card mat-elevation-z8" flex="80" style="margin-top: 10px; width: 90%;">
+                <mat-card-title>
+
+                </mat-card-title>
+                <mat-card-subtitle>
+
+                </mat-card-subtitle>
+                <mat-card-content fxLayout="column" fxLayoutAlign="stretch">
+                    <div fxFlex="100" fxLayout="row" fxLayoutAlign="space-between start">
+                        <mat-form-field fxFlex="30">
+                            <input matInput type="text" class="form-control" value=""
+                                placeholder="Pesquisar pela descricao">
+                        </mat-form-field>
+                        <button mat-raised-button color="primary" (click)="novoPlano()">
+                            <mat-icon>add</mat-icon>Cadastrar novo Plano
+                        </button>
+                    </div>
+
+                    <div fxFlex="100" fxLayout="row" fxLayoutAlign="space-between start">
+                        <mat-divider></mat-divider>
+                        <table mat-table [dataSource]="plano$ | async" style="width: 100%">
+                            <ng-container matColumnDef="descricao">
+                                <th mat-header-cell *matHeaderCellDef>Descrição</th>
+                                <td mat-cell *matCellDef="let element">{{element.descricao}}</td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="atendePlano">
+                                <th mat-header-cell *matHeaderCellDef>Atende o PLano</th>
+                                <td mat-cell *matCellDef="let element">
+                                    {{element.atendePlano === true ? 'Sim' : 'Não' }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="editar">
+                                <th mat-header-cell *matHeaderCellDef>Editar</th>
+                                <td mat-cell *matCellDef="let element">
+                                    <button mat-button color="primary" (click)="edit(element)">
+                                        <mat-icon>editar</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="excluir">
+                                <th mat-header-cell *matHeaderCellDef>Excluir</th>
+                                <td mat-cell *matCellDef="let element">
+                                    <button mat-button color="warn" (click)="del(element)">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="vincularExames">
+                                <th mat-header-cell *matHeaderCellDef>Exames do Plano</th>
+                                <td mat-cell *matCellDef="let element">
+                                    <button mat-button color="primary" (click)="alteraExamesDoPlano(element)">
+                                        <mat-icon>accessibility</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                    </div>
+
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+    <div fxLayout="column" *ngIf="onEdit">
+        <div fxLayout="row" fxLayoutAlign="center center">
+            <mat-card class="info-card mat-elevation-z8" flex="80" style="margin-top: 60px; width:800px;">
+                <mat-card-title>
+                    Cadastros de Planos
+                </mat-card-title>
+                <mat-card-subtitle>
+                </mat-card-subtitle>
+                <mat-card-content fxLayout="column" fxLayoutAlign="stretch">
+                    <form action="" [formGroup]="PlanoForm" (ngSubmit)="onSubmit()" fxLayout="column"
+                        fxLayoutAlign="space-around stretch">
+                        <div fxFlex="100" fxLayout="row" fxLayoutAlign="start start">
+                            <mat-form-field fxFlex="75">
+                                <input type="text" matInput autocomplete="off" formControlName="descricao"
+                                    placeholder="Informe a descrição do Plano">
+                                <mat-error *ngIf="PlanoForm.controls.descricao.hasError('required')">
+                                    Por favor informe a descrição do PLano
+                                </mat-error>
+                                <mat-error *ngIf="PlanoForm.controls.descricao.hasError('minlength')">
+                                    Por favor informe no mínimo 3 letras
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div fxFlex="100" fxLayout="row" fxLayoutAlign="start start">
+                            <mat-form-field fxFlex="35" class="espaco">
+                                <mat-select placeholder="Atender Plano" formControlName="atendePlano">
+                                    <mat-option [value]="true">
+                                        Ativo
+                                    </mat-option>
+                                    <mat-option [value]="false">
+                                        Inativo
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                        </div>
+                        <div fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
+                            <button mat-button color="primary" type="submit"
+                                [disabled]="!PlanoForm.valid">Salvar</button>
+                            <button mat-button color="warn" (click)="cancel()">Cancel</button>
+                        </div>
+
+                    </form>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+    <div fxLayout="column" [style.display]="!onExamesDoPlano ? 'block' : 'none'">
+        <div fxLayout="row" fxLayoutAlign="center center">
+            <mat-card class="tamanhoTotal">
+                <mat-card-title>
+                    Exames Atendidos pelo plano Nome do Plano
+                </mat-card-title>
+                <mat-card-subtitle>
+                </mat-card-subtitle>
+                <mat-card-content fxLayout="column" fxLayoutAlign="stretch">
+                    <div class="mat-elevation-z8">
+                        <div fxLayout="column" fxLayoutAlign="center center">
+                            <mat-form-field>
+                                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Pesquisar">
+                            </mat-form-field>
+                            <table mat-table [dataSource]="dataSourcePlanosExames">
+                                <ng-container matColumnDef="atendeExame">
+                                    <th mat-header-cell *matHeaderCellDef>Atende o Exame</th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <mat-checkbox [checked]="element.atendeExame"></mat-checkbox>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="descricao">
+                                    <th mat-header-cell *matHeaderCellDef>Nome do Exame</th>
+                                    <td mat-cell *matCellDef="let element">{{element.descricao}}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="valorPadrao">
+                                    <th mat-header-cell *matHeaderCellDef>Valor (Altere o valor do exame apenas para esse convenio)</th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <!--                                          
+                                               <input currencyMask [(ngModel)]="value" min="-10.50" max="100.75" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" >
+                                        -->
+                                        <input type="number" #player  min="0" max="9999.99" step="0.5" pattern="^\d*(\.\d{0,2})?$"
+                                             [value]="element.valorPadrao" (blur)="teste(player.value)" > 
+                                     </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumnsExames;"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumnsExames;"></tr>
+                            </table>
+                        </div>
+                        <div fxLayout="column" fxLayoutAlign="center center">
+                            <mat-paginator #paginacaoPlanoExame [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                            </mat-paginator>
+                            <div fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
+                                <button mat-button color="primary" (click)="salvarExamesPlano()">Salvar</button>
+                                <button mat-button color="warn" (click)="cancel()">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+        </div>
+
+    </div>
+
+</div>
