@@ -3,6 +3,7 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
+import { User } from '../user';
 
 @Component({
   selector: 'app-login',
@@ -27,11 +28,37 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
+  private loginOkNotification(u: User) {
+    this.snackBar.open(
+      'Login realizado com sucesso. Bem vindo ' + u.firstname + '!', 'OK', 
+      {duration: 2000}
+    )
+  }
+
+  private loginErrorNotification(err) {
+    console.log('erro', err);
+    this.snackBar.open(
+      err, 'OK', 
+      {duration: 2000}
+    )
+  }
+
   onSubmit() {
     this.loading = true;
-    this.authService.login(
-      this.loginForm.value.email, this.loginForm.value.password)
-      .subscribe()
+    let email = this.loginForm.value.email;
+    let password = this.loginForm.value.password
+    this.authService.login( email, password)
+      .subscribe(
+        (u) => {
+          this.loginOkNotification(u);
+          this.router.navigateByUrl('/');
+          this.loading = false;
+        },
+        (err) => {
+          this.loginErrorNotification(err);
+          this.loading = false;
+        }
+      )
 
   }
 

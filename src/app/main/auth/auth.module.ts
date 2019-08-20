@@ -17,7 +17,7 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 const routes: Routes = [
-  { path: '', component: LoginComponent},
+  //{ path: '', component: LoginComponent},
   { path: 'login', component: LoginComponent},
   { path: 'register', component: RegisterComponent}
 ];

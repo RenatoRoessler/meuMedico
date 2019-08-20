@@ -1,12 +1,14 @@
 import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { delay, filter, take, takeUntil } from 'rxjs/operators';
 
 import { FuseConfigService } from '@fuse/services/config.service';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
 import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
+import { User } from 'app/main/auth/user';
+import { AuthService } from 'app/main/auth/auth.service';
 
 @Component({
     selector     : 'navbar-vertical-style-1',
@@ -18,6 +20,8 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy
 {
     fuseConfig: any;
     navigation: any;
+    user$: Observable<User>;
+    authenticated$: Observable<boolean>;
 
     // Private
     private _fusePerfectScrollbar: FusePerfectScrollbarDirective;
@@ -35,11 +39,15 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy
         private _fuseConfigService: FuseConfigService,
         private _fuseNavigationService: FuseNavigationService,
         private _fuseSidebarService: FuseSidebarService,
-        private _router: Router
+        private _router: Router,
+        private authService: AuthService,
+        //private router: Router
     )
     {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
+        this.user$ = this.authService.getUser();
+        this.authenticated$ = this.authService.authenticated();
     }
 
     // -----------------------------------------------------------------------------------------------------
