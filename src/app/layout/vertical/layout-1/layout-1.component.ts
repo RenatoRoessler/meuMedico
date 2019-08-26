@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { FuseConfigService } from '@fuse/services/config.service';
 import { navigation } from 'app/navigation/navigation';
+import { AuthService } from 'app/main/auth/auth.service';
 
 @Component({
     selector     : 'vertical-layout-1',
@@ -15,6 +16,7 @@ export class VerticalLayout1Component implements OnInit, OnDestroy
 {
     fuseConfig: any;
     navigation: any;
+    authenticated$: Observable<boolean>;
 
     // Private
     private _unsubscribeAll: Subject<any>;
@@ -25,7 +27,8 @@ export class VerticalLayout1Component implements OnInit, OnDestroy
      * @param {FuseConfigService} _fuseConfigService
      */
     constructor(
-        private _fuseConfigService: FuseConfigService
+        private _fuseConfigService: FuseConfigService,
+        private authService: AuthService
     )
     {
         // Set the defaults
@@ -33,6 +36,7 @@ export class VerticalLayout1Component implements OnInit, OnDestroy
 
         // Set the private defaults
         this._unsubscribeAll = new Subject();
+        this.authenticated$ = this.authService.authenticated();
     }
 
     // -----------------------------------------------------------------------------------------------------

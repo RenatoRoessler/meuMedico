@@ -24,11 +24,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { NotFoundComponent } from './main/apps/not-found/not-found.component';
 import { AuthModule } from './main/auth/auth.module';
+import { AuthGuardService } from './auth/auth-guard.service';
 
 
 const appRoutes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: '/main/people'},
-    { path: 'main', loadChildren: './main/main.module#MainModule'}, //loadChildren carrega module
+    { path: 'main', loadChildren: './main/main.module#MainModule', canActivate: [ AuthGuardService]}, //loadChildren carrega module
     {
         path        : 'apps',
         loadChildren: './main/apps/apps.module#AppsModule'

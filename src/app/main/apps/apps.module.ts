@@ -2,15 +2,16 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FuseSharedModule } from '@fuse/shared.module';
 import { CurrencyMaskConfig, CURRENCY_MASK_CONFIG } from 'ng2-currency-mask/src/currency-mask.config';
+import { AuthGuardService } from 'app/auth/auth-guard.service';
 
 const routes = [
   {
     path        : 'planos',
-    loadChildren: './plano/plano.module#PlanoModule'
+    loadChildren: './plano/plano.module#PlanoModule',  canActivate: [ AuthGuardService]
   },
   {
     path        : 'exames',
-    loadChildren: './exames/exames.module#ExamesModule'
+    loadChildren: './exames/exames.module#ExamesModule', canActivate: [ AuthGuardService]
   }
 ]
 
