@@ -4,6 +4,7 @@ import { FuseSharedModule } from '@fuse/shared.module';
 import { CurrencyMaskConfig, CURRENCY_MASK_CONFIG } from 'ng2-currency-mask/src/currency-mask.config';
 import { AuthGuardService } from 'app/auth/auth-guard.service';
 
+
 const routes = [
   {
     path        : 'planos',
@@ -12,6 +13,10 @@ const routes = [
   {
     path        : 'exames',
     loadChildren: './exames/exames.module#ExamesModule', canActivate: [ AuthGuardService]
+  },
+  {
+    path        : 'agenda',
+    loadChildren: './agenda/agenda.module#AgendaModule', canActivate: [ AuthGuardService]
   }
 ]
 

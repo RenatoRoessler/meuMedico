@@ -2,11 +2,12 @@ import { FuseNavigation } from '@fuse/types';
 
 export const navigation: FuseNavigation[] = [
     {
-        id       : 'applications',
-        title    : 'Applications',
+        id: 'applications',
+        title: 'Applications',
         translate: 'NAV.APPLICATIONS',
-        type     : 'group',
-        children : [
+        type: 'group',
+        children: [
+            /*
             {
                 id       : 'sample',
                 title    : 'Sample',
@@ -21,21 +22,30 @@ export const navigation: FuseNavigation[] = [
                     fg       : '#FFFFFF'
                 }
             },
+            */
             {
-                id       : 'plano',
-                title    : 'Plano',
-                translate: 'Planos',
-                type     : 'item',
-                icon     : 'email',
-                url      : '/apps/planos/confPlano'
+                id: 'agenda',
+                title: 'Agenda',
+                translate: 'Configuração da agenda',
+                type: 'item',
+                icon: 'list-alt',
+                url: '/apps/agenda/confAgenda'
             },
             {
-                id       : 'exame',
-                title    : 'Exames',
+                id: 'plano',
+                title: 'Plano',
+                translate: 'Planos',
+                type: 'item',
+                icon: 'email',
+                url: '/apps/planos/confPlano'
+            },
+            {
+                id: 'exame',
+                title: 'Exames',
                 translate: 'Exames',
-                type     : 'item',
-                icon     : 'accessibility',
-                url      : '/apps/exames'
+                type: 'item',
+                icon: 'accessibility',
+                url: '/apps/exames'
             }
         ]
     }

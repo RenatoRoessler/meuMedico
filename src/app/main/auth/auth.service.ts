@@ -54,6 +54,15 @@ export class AuthService {
       //switchMap troca um observable por outro
   }
 
+  getIdUser() : Observable<string>{
+    return this.afAuth.authState
+      .pipe(
+        map(u => u.uid)
+      )
+
+      //switchMap troca um observable por outro
+  }
+
   authenticated() : Observable<boolean>{
     return this.afAuth.authState
       .pipe(
